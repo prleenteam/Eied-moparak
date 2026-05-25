@@ -3,6 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta property="og:title" content="بطاقة تهنئة العيد - فريق برلين التطوعي">
+    <meta property="og:description" content="أصدر بطاقة تهنئة عيد الأضحى المبارك باسمك الخاص وشاركها مع من تحب.">
+    <meta property="og:image" content="card.PNG">
+    <meta property="og:type" content="website">
+    
+    <link rel="icon" href="card.PNG" type="image/png">
+    
     <title>تهنئة العيد - فريق برلين التطوعي</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
@@ -14,11 +22,12 @@
             --primary-color: #1a4670;
             --accent-color: #2b7bc0;
             --success-color: #28a745;
-            --glass-bg: rgba(255, 255, 255, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.4);
+            --share-color: #8e44ad;
+            --copy-color: #e67e22;
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.5);
         }
 
-        /* تأثير الخلفية المموّهة المأخوذة من التصميم */
         body {
             font-family: 'Tajawal', sans-serif;
             text-align: center;
@@ -35,7 +44,6 @@
             overflow-x: hidden;
         }
 
-        /* شاشة التحميل الاحترافية */
         #loader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -51,7 +59,7 @@
             font-size: 24px;
             font-weight: 700;
             color: var(--primary-color);
-            animation: pulse 1.5s infinite ease-in-out;
+            animation: pulse-text 1.5s infinite ease-in-out;
             margin-bottom: 15px;
         }
         .spinner {
@@ -62,23 +70,22 @@
             border-radius: 50%;
             animation: spin 1s infinite linear;
         }
-        @keyframes pulse {
+        @keyframes pulse-text {
             0%, 100% { transform: scale(0.98); opacity: 0.6; }
             50% { transform: scale(1.02); opacity: 1; }
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* حاوية الزجاج المصنفر الفخمة */
         .container {
             width: 100%;
             max-width: 440px;
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            padding: 35px 25px;
+            padding: 35px 20px;
             border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
             animation: containerFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             box-sizing: border-box;
         }
@@ -104,7 +111,7 @@
             border-radius: 14px;
             margin-bottom: 22px;
             outline: none;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.9);
             transition: all 0.3s ease;
             box-sizing: border-box;
             text-align: center;
@@ -115,45 +122,64 @@
             background: #ffffff;
         }
 
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            width: 100%;
+        }
+        
+        .buttons-grid.two-cols {
+            grid-template-columns: 1fr 1fr;
+        }
+
         button {
-            background-color: var(--accent-color);
-            color: white;
             border: none;
-            padding: 15px 35px;
-            font-size: 18px;
+            padding: 14px 10px;
+            font-size: 16px;
             font-weight: 700;
             font-family: 'Tajawal', sans-serif;
-            border-radius: 14px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
             width: 100%;
-            box-shadow: 0 4px 12px rgba(43, 123, 192, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        button:hover {
-            background-color: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(26, 70, 112, 0.3);
-        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
         button:active { transform: translateY(1px); }
 
-        .btn-secondary {
-            background-color: #6c757d;
-            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
-            margin-top: 12px;
-        }
-        .btn-secondary:hover { background-color: #545b62; }
+        .btn-primary { background-color: var(--accent-color); font-size: 18px; padding: 15px; }
+        .btn-primary:hover { background-color: var(--primary-color); }
+        
+        .btn-success { background-color: var(--success-color); }
+        .btn-share { background-color: var(--share-color); }
+        .btn-copy { background-color: var(--copy-color); }
+        .btn-secondary { background-color: #6c757d; }
 
-        .btn-success {
-            background-color: var(--success-color);
-            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
-            margin-top: 15px;
+        /* تأثير النبض الجذاب للأزرار المهمة */
+        .pulse-anim {
+            animation: pulse-button 2s infinite;
         }
-        .btn-success:hover { background-color: #1e7e34; }
+        @keyframes pulse-button {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+        .btn-share.pulse-anim { animation-name: pulse-share; }
+        @keyframes pulse-share {
+            0% { box-shadow: 0 0 0 0 rgba(142, 68, 173, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(142, 68, 173, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(142, 68, 173, 0); }
+        }
 
-        /* منطقة عرض وتأثير البطاقة ثلاثي الأبعاد */
         .tilt-wrapper {
             perspective: 1000px;
-            margin: 25px 0;
+            margin: 15px 0 25px 0;
             display: inline-block;
             width: 100%;
         }
@@ -164,49 +190,47 @@
             box-shadow: 0 12px 28px rgba(0,0,0,0.18);
             transition: transform 0.1s ease-out;
             transform-style: preserve-3d;
-            backface-visibility: hidden;
         }
 
         #resultPage { display: none; }
 
-        /* قسم قنوات التواصل الفخم في الأسفل */
+        /* قسم الحسابات */
         .team-footer {
-            margin-top: 30px;
-            border-top: 1px solid rgba(26, 70, 112, 0.1);
+            margin-top: 25px;
+            border-top: 1px solid rgba(26, 70, 112, 0.15);
             padding-top: 20px;
         }
         .footer-title {
             font-size: 13px;
-            color: rgba(26, 70, 112, 0.7);
+            color: rgba(26, 70, 112, 0.8);
             margin-bottom: 12px;
-            font-weight: 500;
+            font-weight: 700;
         }
         .social-icons {
             display: flex;
             justify-content: center;
-            gap: 14px;
+            gap: 12px;
             flex-wrap: wrap;
         }
         .icon-link {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.9);
+            width: 38px;
+            height: 38px;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
             text-decoration: none;
         }
         .icon-link:hover {
             transform: translateY(-4px);
             background: var(--primary-color);
-            box-shadow: 0 6px 12px rgba(26, 70, 112, 0.25);
         }
         .icon-link svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             fill: var(--primary-color);
             transition: fill 0.3s ease;
         }
@@ -223,7 +247,7 @@
     <div id="inputPage" class="container">
         <h2>أصدر بطاقة التهنئة الخاصة بك</h2>
         <input type="text" id="nameInput" placeholder="اكتب اسمك الكريم هنا..." maxlength="40">
-        <button onclick="generateCard()">إنشاء البطاقة الاحترافية</button>
+        <button class="btn-primary" onclick="generateCard()">إنشاء البطاقة الاحترافية</button>
         
         <div class="team-footer">
             <div class="footer-title">منصات فريق برلين التطوعي الإعلامية</div>
@@ -238,8 +262,24 @@
             <canvas id="canvas"></canvas>
         </div>
         
-        <button class="btn-success" onclick="downloadImage()">تحميل البطاقة بجودة عالية</button>
-        <button class="btn-secondary" onclick="goBack()">تعديل الاسم أو إنشاء أخرى</button>
+        <div class="buttons-grid two-cols">
+            <button class="btn-share pulse-anim" onclick="shareCard()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                مشاركة
+            </button>
+            <button class="btn-success pulse-anim" onclick="downloadImage()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                تحميل
+            </button>
+        </div>
+        
+        <div class="buttons-grid" style="margin-top: 12px;">
+            <button class="btn-copy" onclick="copyGreetingText()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                نسخ نص تهنئة جاهز
+            </button>
+            <button class="btn-secondary" onclick="goBack()">تعديل الاسم</button>
+        </div>
         
         <div class="team-footer">
             <div class="footer-title">تابع منصاتنا للمزيد من المبادرات</div>
@@ -251,21 +291,15 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const image = new Image();
-        
-        // قراءة الصورة بالامتداد الصحيح المرفوع
         image.src = 'card.PNG'; 
 
         let imageLoaded = false;
         image.onload = function() {
             imageLoaded = true;
-            // إخفاء شاشة التحميل بمجرد جاهزية الصورة الخلفية
             document.getElementById('loader').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('loader').style.display = 'none';
-            }, 500);
+            setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 500);
         };
 
-        // مصفوفة الحسابات محدثة بالروابط اللي طلبتها
         const teamContacts = [
             { name: 'X', url: 'https://x.com/prlen_1', svg: '<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>' },
             { name: 'TikTok', url: 'https://www.tiktok.com/@prlen_1', svg: '<svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.03 1.6 4.17 1.13 1.2 2.75 1.9 4.43 2.05v3.82c-1.39-.11-2.77-.61-3.92-1.43-.19-.13-.37-.28-.55-.43v6.79c-.04 2.54-1.31 4.96-3.48 6.27-2.3 1.44-5.29 1.51-7.64.19-2.45-1.34-3.87-4.04-3.66-6.86.21-2.97 2.41-5.54 5.37-6.04.45-.07.91-.1 1.37-.1v3.91c-.42.04-.84.14-1.23.31-1.22.52-1.95 1.83-1.8 3.14.15 1.37 1.25 2.52 2.62 2.63 1.48.16 2.87-.85 3.14-2.31.06-.32.08-.64.08-.96V.02z"/></svg>' },
@@ -274,42 +308,27 @@
             { name: 'WhatsApp', url: 'https://wa.me/966557683385', svg: '<svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.455L0 24zm6.59-4.846c1.66.986 3.296 1.478 4.973 1.479 5.432 0 9.855-4.387 9.858-9.774.002-2.611-1.015-5.066-2.864-6.92-1.849-1.854-4.307-2.876-6.92-2.878-5.433 0-9.856 4.387-9.86 9.775-.001 1.764.475 3.3 1.408 4.713l-.997 3.646 3.734-.972zm11.115-3.39c-.254-.127-1.503-.742-1.737-.826-.233-.085-.403-.127-.572.127-.169.254-.656.826-.804.996-.148.17-.297.19-.551.063-.254-.127-1.071-.395-2.04-1.26-.754-.673-1.263-1.504-1.411-1.758-.148-.254-.016-.392.111-.518.115-.113.254-.296.381-.444.127-.148.17-.254.254-.423.085-.17.042-.317-.021-.444-.064-.127-.572-1.377-.784-1.88-.207-.502-.415-.434-.572-.434-.148 0-.317-.01-.487-.01-.17 0-.445.063-.678.317-.233.254-.89 0-.89 2.18s1.59 4.28 1.81 4.58c.22.3 3.108 4.823 7.518 6.74.188.06.415.162.61.196.546.078 1.042.062 1.433.004.437-.065 1.346-.54 1.536-1.06.19-.51.19-.955.134-1.04-.056-.086-.203-.148-.457-.275z"/></svg>' }
         ];
 
-        // بناء الأيقونات برمجياً لتظهر في كلا الصفحتين
         function setupSocials() {
-            const html = teamContacts.map(c => `
-                <a href="${c.url}" target="_blank" class="icon-link" title="${c.name}">
-                    ${c.svg}
-                </a>
-            `).join('');
+            const html = teamContacts.map(c => `<a href="${c.url}" target="_blank" class="icon-link" title="${c.name}">${c.svg}</a>`).join('');
             document.getElementById('socialsInputPage').innerHTML = html;
             document.getElementById('socialsResultPage').innerHTML = html;
         }
         setupSocials();
 
         function generateCard() {
-            if (!imageLoaded) {
-                alert('جاري تحميل تصميم البطاقة، يرجى المحاولة بعد ثانية...');
-                return;
-            }
-
+            if (!imageLoaded) { alert('جاري تحميل تصميم البطاقة، يرجى المحاولة بعد ثانية...'); return; }
             const name = document.getElementById('nameInput').value.trim();
-            if(!name) {
-                alert('الرجاء كتابة اسمك أولاً في المربع المخصص!');
-                return;
-            }
+            if(!name) { alert('الرجاء كتابة اسمك أولاً في المربع المخصص!'); return; }
 
             canvas.width = image.width;
             canvas.height = image.height;
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-            // حجم الخط 60 مع ميزة التصغير التلقائي
             let fontSize = 60; 
             const maxTextWidth = canvas.width * 0.53; 
-
             ctx.font = `bold ${fontSize}px Tajawal`;
             let textWidth = ctx.measureText(name).width;
 
-            // يصغر الخط تلقائياً لو الاسم أطول من المربع
             while (textWidth > maxTextWidth && fontSize > 25) {
                 fontSize -= 2; 
                 ctx.font = `bold ${fontSize}px Tajawal`;
@@ -319,26 +338,18 @@
             ctx.fillStyle = '#1a4670'; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-
-            const x = canvas.width / 2; 
-            const y = canvas.height * 0.435; 
-
-            ctx.fillText(name, x, y);
+            ctx.fillText(name, canvas.width / 2, canvas.height * 0.435);
 
             document.getElementById('inputPage').style.display = 'none';
             document.getElementById('resultPage').style.display = 'block';
 
-            // إطلاق الألعاب النارية والمؤثر الصوتي التلقائي
             playPopSound();
             fireworks();
         }
 
-        // المؤثر الصوتي الخاص الاحتفالي (Web Audio API للعمل بكفاءة على المتصفحات)
         function playPopSound() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // الصوت الأول الصاعد
                 let osc1 = audioCtx.createOscillator();
                 let gain1 = audioCtx.createGain();
                 osc1.type = 'sine';
@@ -348,35 +359,57 @@
                 gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
                 osc1.connect(gain1);
                 gain1.connect(audioCtx.destination);
-                osc1.start();
-                osc1.stop(audioCtx.currentTime + 0.15);
-            } catch(e) { console.log("Audio play blocked or unsupported"); }
+                osc1.start(); osc1.stop(audioCtx.currentTime + 0.15);
+            } catch(e) {}
         }
 
         function fireworks() {
             var duration = 3 * 1000; 
             var animationEnd = Date.now() + duration;
             var defaults = { startVelocity: 28, spread: 360, ticks: 60, zIndex: 10 };
-
-            function randomInRange(min, max) {
-                return Math.random() * (max - min) + min;
-            }
-
             var interval = setInterval(function() {
                 var timeLeft = animationEnd - Date.now();
-
-                if (timeLeft <= 0) {
-                    return clearInterval(interval);
-                }
-
+                if (timeLeft <= 0) return clearInterval(interval);
                 var particleCount = 45 * (timeLeft / duration);
-                
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.15, 0.35), y: 0.95 } }));
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.65, 0.85), y: 0.95 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random() * 0.2 + 0.15, y: 0.95 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: Math.random() * 0.2 + 0.65, y: 0.95 } }));
             }, 260);
         }
 
-        // ميزة تفاعل الـ 3D مع حركة المؤشر أو اللمس للمستخدم
+        // دالة المشاركة المباشرة (Web Share API)
+        async function shareCard() {
+            if (navigator.share) {
+                canvas.toBlob(async (blob) => {
+                    const file = new File([blob], 'Eid_Greeting.png', { type: 'image/png' });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        try {
+                            await navigator.share({
+                                files: [file],
+                                title: 'تهنئة العيد - فريق برلين التطوعي',
+                                text: 'كل عام وأنتم بخير! ✨'
+                            });
+                        } catch (err) { console.log('Share canceled or failed'); }
+                    } else {
+                        alert("عذراً، متصفحك لا يدعم المشاركة المباشرة للصور. يرجى استخدام زر التحميل.");
+                    }
+                });
+            } else {
+                alert("عذراً، جهازك لا يدعم المشاركة المباشرة. يرجى استخدام زر التحميل.");
+            }
+        }
+
+        // دالة نسخ نص التهنئة
+        function copyGreetingText() {
+            const userName = document.getElementById('nameInput').value.trim();
+            const textToCopy = `يطيب لي أن أرفع إليكم أصدق التهاني والتبريكات بمناسبة حلول عيد الأضحى المبارك، سائلاً المولى عز وجل أن يعيده علينا وعليكم باليُمن والبركات. وكل عام وأنتم بخير.\n\n- ${userName}`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert("تم نسخ نص التهنئة بنجاح! يمكنك الآن لصقه في أي محادثة.");
+            }).catch(err => {
+                alert("عذراً، حدث خطأ أثناء النسخ.");
+            });
+        }
+
         const tiltContainer = document.getElementById('tiltContainer');
         tiltContainer.addEventListener('mousemove', (e) => {
             const rect = canvas.getBoundingClientRect();
@@ -384,9 +417,7 @@
             const y = e.clientY - rect.top;
             const xc = rect.width / 2;
             const yc = rect.height / 2;
-            const angleX = (yc - y) / 12; 
-            const angleY = (x - xc) / 12;
-            canvas.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.02)`;
+            canvas.style.transform = `rotateX(${(yc - y) / 12}deg) rotateY(${(x - xc) / 12}deg) scale(1.02)`;
         });
         tiltContainer.addEventListener('mouseleave', () => {
             canvas.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
@@ -404,6 +435,5 @@
             document.getElementById('inputPage').style.display = 'block';
         }
     </script>
-
 </body>
 </html>
