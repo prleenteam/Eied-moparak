@@ -6,10 +6,10 @@
     
     <meta property="og:title" content="بطاقة تهنئة العيد - فريق برلين التطوعي">
     <meta property="og:description" content="أصدر بطاقة تهنئة عيد الأضحى المبارك باسمك ولقبك المهني وشاركها فوراً.">
-    <meta property="og:image" content="card.PNG">
+    <meta property="og:image" content="card.png">
     <meta property="og:type" content="website">
     
-    <link rel="icon" href="card.PNG" type="image/png">
+    <link rel="icon" href="card.png" type="image/png">
     
     <title>تهنئة العيد - فريق برلين التطوعي</title>
     
@@ -38,8 +38,8 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            /* تم إرجاع الامتداد بحروف كبيرة هنا */
-            background: linear-gradient(rgba(240, 244, 248, 0.8), rgba(240, 244, 248, 0.8)), url('card.PNG') no-repeat center center fixed;
+            /* الامتداد بحروف صغيرة */
+            background: linear-gradient(rgba(240, 244, 248, 0.8), rgba(240, 244, 248, 0.8)), url('card.png') no-repeat center center fixed;
             background-size: cover;
             box-sizing: border-box;
             overflow-x: hidden;
@@ -307,7 +307,7 @@
         <div class="input-group">
             <select id="prefixSelect">
                 <option value="">بدون لقب</option>
-                <option value="د.">د.</option>
+                <option value="أ.">أ.</option> <option value="د.">د.</option>
                 <option value="أخصائي">أخصائي</option>
                 <option value="أخصائية">أخصائية</option>
                 <option value="ممارس صحي">ممارس صحي</option>
@@ -361,8 +361,8 @@
         const ctx = canvas.getContext('2d');
         const image = new Image();
         
-        // تم إرجاع الامتداد بحروف كبيرة هنا
-        image.src = 'card.PNG'; 
+        // الامتداد بحروف صغيرة
+        image.src = 'card.png'; 
 
         const qrImg = new Image();
         qrImg.crossOrigin = "anonymous";
