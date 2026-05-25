@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تهنئة العيد - فريق برلين الصحي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght=700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
@@ -89,8 +89,13 @@
         const ctx = canvas.getContext('2d');
         const image = new Image();
         
-        // يجب أن يكون اسم صورتك الأساسية هو card.png
+        // مسار الصورة الأساسية
         image.src = 'card.png'; 
+
+        // نظام حماية: إذا لم يجد الكود الصورة أو فشل في تحميلها يظهر تنبيه فوراً
+        image.onerror = function() {
+            alert("خطأ: لم يتم العثور على ملف الصورة 'card.png'. تأكد من رفع الصورة في حساب GitHub بنفس المجلد وبنفس الاسم تماماً وبحروف صغيرة (card.png).");
+        };
 
         function generateCard() {
             const name = document.getElementById('nameInput').value.trim();
@@ -99,34 +104,43 @@
                 return;
             }
 
-            // ضبط حجم مساحة الرسم بنفس أبعاد الصورة الأصلية
-            canvas.width = image.width;
-            canvas.height = image.height;
+            // التحقق من أن الصورة جاهزة ومحملة بالكامل
+            if (!image.complete || image.naturalWidth === 0) {
+                alert('تنبيه: الصورة لا تزال قيد التحميل أو لم يتم العثور عليها، يرجى التأكد من رفع ملف الصورة بشكل صحيح.');
+                return;
+            }
 
-            // رسم الصورة الأصلية
+            // ضبط الأبعاد الحقيقية للصورة
+            canvas.width = image.naturalWidth;
+            canvas.height = image.naturalHeight;
+
+            // رسم الصورة
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-            // إعدادات الخط (حجم الخط، نوعه، ولونه)
-            ctx.font = 'bold 80px Tajawal'; // يمكنك تكبير أو تصغير الرقم 80 حسب رغبتك
-            ctx.fillStyle = '#1a4670'; // لون النص (أزرق غامق متناسق مع التصميم)
+            // إعدادات الخط داخل المربع
+            ctx.font = 'bold 80px Tajawal'; 
+            ctx.fillStyle = '#1a4670'; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            // إحداثيات موقع النص (السر هنا لضبط الاسم في المربع)
-            const x = canvas.width / 2; // في المنتصف أفقياً
-            const y = canvas.height * 0.435; // موقع المربع عمودياً (يمكنك تعديل الرقم 0.435 قليلاً لأعلى أو أسفل إذا لزم الأمر)
+            // إحداثيات موقع النص (في منتصف المربع تماماً)
+            const x = canvas.width / 2; 
+            const y = canvas.height * 0.435; 
 
-            // طباعة الاسم على الصورة
+            // طباعة الاسم
             ctx.fillText(name, x, y);
 
-            // إظهار الصورة وزر التحميل
+            // إظهار بطاقة المعاينة وزر التحميل للمستخدم
             canvas.style.display = 'block';
             document.getElementById('downloadBtn').style.display = 'inline-block';
+            
+            // التمرير التلقائي لأسفل ليظهر التصميم للمستخدم على الجوال
+            canvas.scrollIntoView({ behavior: 'smooth' });
         }
 
         function downloadImage() {
             const link = document.createElement('a');
-            link.download = 'تهنئة_عيد_الأضحى.png'; // الاسم الذي سيُحفظ به الملف
+            link.download = 'تهنئة_عيد_الأضحى.png'; 
             link.href = canvas.toDataURL('image/png');
             link.click();
         }
