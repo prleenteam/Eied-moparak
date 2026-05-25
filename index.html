@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <meta property="og:title" content="بطاقة تهنئة العيد - فريق برلين التطوعي">
-    <meta property="og:description" content="أصدر بطاقة تهنئة عيد الأضحى المبارك باسمك الخاص وشاركها مع من تحب.">
+    <meta property="og:description" content="أصدر بطاقة تهنئة عيد الأضحى المبارك باسمك ولقبك المهني وشاركها فوراً.">
     <meta property="og:image" content="card.PNG">
     <meta property="og:type" content="website">
     
@@ -24,7 +24,7 @@
             --success-color: #28a745;
             --share-color: #8e44ad;
             --copy-color: #e67e22;
-            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-bg: rgba(255, 255, 255, 0.78);
             --glass-border: rgba(255, 255, 255, 0.5);
         }
 
@@ -38,12 +38,22 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            background: linear-gradient(rgba(240, 244, 248, 0.85), rgba(240, 244, 248, 0.85)), url('card.PNG') no-repeat center center fixed;
+            /* تم إرجاع الامتداد بحروف كبيرة هنا */
+            background: linear-gradient(rgba(240, 244, 248, 0.8), rgba(240, 244, 248, 0.8)), url('card.PNG') no-repeat center center fixed;
             background-size: cover;
             box-sizing: border-box;
             overflow-x: hidden;
         }
 
+        /* كانفاس الجسيمات المضيئة المتحركة في الخلفية */
+        #bgCanvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* شاشة التحميل النبضية */
         #loader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -76,6 +86,39 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* الزر العائم لتشغيل صوت تكبيرات العيد */
+        #audioContainer {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+        .audio-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+        .audio-btn:hover { transform: scale(1.1); }
+        .audio-btn.playing {
+            animation: pulse-audio 1.2s infinite ease-in-out;
+            background: var(--success-color);
+        }
+        @keyframes pulse-audio {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); box-shadow: 0 4px 20px rgba(40, 167, 69, 0.4); }
+        }
+
+        /* حاوية الواجهة الزجاجية */
         .container {
             width: 100%;
             max-width: 440px;
@@ -102,21 +145,41 @@
             font-weight: 700;
         }
 
-        input[type="text"] {
+        /* حقل الإدخال واللقب المهني */
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 22px;
             width: 100%;
+        }
+        select {
+            width: 32%;
+            padding: 16px;
+            font-size: 15px;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            border: 2px solid rgba(26, 70, 112, 0.15);
+            border-radius: 14px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        input[type="text"] {
+            width: 68%;
             padding: 16px;
             font-size: 16px;
             font-family: 'Tajawal', sans-serif;
             border: 2px solid rgba(26, 70, 112, 0.15);
             border-radius: 14px;
-            margin-bottom: 22px;
             outline: none;
             background: rgba(255, 255, 255, 0.9);
             transition: all 0.3s ease;
             box-sizing: border-box;
             text-align: center;
         }
-        input[type="text"]:focus {
+        select:focus, input[type="text"]:focus {
             border-color: var(--accent-color);
             box-shadow: 0 0 10px rgba(43, 123, 192, 0.25);
             background: #ffffff;
@@ -128,10 +191,7 @@
             gap: 12px;
             width: 100%;
         }
-        
-        .buttons-grid.two-cols {
-            grid-template-columns: 1fr 1fr;
-        }
+        .buttons-grid.two-cols { grid-template-columns: 1fr 1fr; }
 
         button {
             border: none;
@@ -155,16 +215,12 @@
 
         .btn-primary { background-color: var(--accent-color); font-size: 18px; padding: 15px; }
         .btn-primary:hover { background-color: var(--primary-color); }
-        
         .btn-success { background-color: var(--success-color); }
         .btn-share { background-color: var(--share-color); }
         .btn-copy { background-color: var(--copy-color); }
         .btn-secondary { background-color: #6c757d; }
 
-        /* تأثير النبض الجذاب للأزرار المهمة */
-        .pulse-anim {
-            animation: pulse-button 2s infinite;
-        }
+        .pulse-anim { animation: pulse-button 2s infinite; }
         @keyframes pulse-button {
             0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
@@ -183,7 +239,7 @@
             display: inline-block;
             width: 100%;
         }
-        canvas {
+        canvas#canvas {
             width: 100%;
             height: auto;
             border-radius: 18px;
@@ -194,7 +250,7 @@
 
         #resultPage { display: none; }
 
-        /* قسم الحسابات */
+        /* قنوات التواصل */
         .team-footer {
             margin-top: 25px;
             border-top: 1px solid rgba(26, 70, 112, 0.15);
@@ -224,29 +280,42 @@
             box-shadow: 0 3px 8px rgba(0,0,0,0.08);
             text-decoration: none;
         }
-        .icon-link:hover {
-            transform: translateY(-4px);
-            background: var(--primary-color);
-        }
-        .icon-link svg {
-            width: 18px;
-            height: 18px;
-            fill: var(--primary-color);
-            transition: fill 0.3s ease;
-        }
+        .icon-link:hover { transform: translateY(-4px); background: var(--primary-color); }
+        .icon-link svg { width: 18px; height: 18px; fill: var(--primary-color); transition: fill 0.3s ease; }
         .icon-link:hover svg { fill: #ffffff; }
     </style>
 </head>
 <body>
+
+    <canvas id="bgCanvas"></canvas>
 
     <div id="loader">
         <div class="loader-pulse">فريق برلين التطوعي</div>
         <div class="spinner"></div>
     </div>
 
+    <div id="audioContainer">
+        <button class="audio-btn" id="audioBtn" onclick="toggleAudio()" title="عيّش جو العيد 🕋">🕋</button>
+        <audio id="eidAudio" loop preload="auto">
+            <source src="https://ia801002.us.archive.org/21/items/TakbeeratEid/Takbeerat%20Eid%20Al-Fitr%20-%20%D1%AA%D9%83%D8%A8%D9%8A%D8%B1%D8%A7%D8%AA%20%D8%B9%D9%8A%D8%AF%20%D8%A7%D9%8الـفـطـر.mp3" type="audio/mp3">
+            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+        </audio>
+    </div>
+
     <div id="inputPage" class="container">
         <h2>أصدر بطاقة التهنئة الخاصة بك</h2>
-        <input type="text" id="nameInput" placeholder="اكتب اسمك الكريم هنا..." maxlength="40">
+        <div class="input-group">
+            <select id="prefixSelect">
+                <option value="">بدون لقب</option>
+                <option value="د.">د.</option>
+                <option value="أخصائي">أخصائي</option>
+                <option value="أخصائية">أخصائية</option>
+                <option value="ممارس صحي">ممارس صحي</option>
+                <option value="متطوع">متطوع</option>
+                <option value="متطوعة">متطوعة</option>
+            </select>
+            <input type="text" id="nameInput" placeholder="اكتب اسمك الكريم هنا..." maxlength="35">
+        </div>
         <button class="btn-primary" onclick="generateCard()">إنشاء البطاقة الاحترافية</button>
         
         <div class="team-footer">
@@ -291,7 +360,13 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const image = new Image();
+        
+        // تم إرجاع الامتداد بحروف كبيرة هنا
         image.src = 'card.PNG'; 
+
+        const qrImg = new Image();
+        qrImg.crossOrigin = "anonymous";
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&color=1a4670&data=${encodeURIComponent(window.location.href)}`;
 
         let imageLoaded = false;
         image.onload = function() {
@@ -317,8 +392,11 @@
 
         function generateCard() {
             if (!imageLoaded) { alert('جاري تحميل تصميم البطاقة، يرجى المحاولة بعد ثانية...'); return; }
-            const name = document.getElementById('nameInput').value.trim();
-            if(!name) { alert('الرجاء كتابة اسمك أولاً في المربع المخصص!'); return; }
+            const rawName = document.getElementById('nameInput').value.trim();
+            if(!rawName) { alert('الرجاء كتابة اسمك أولاً في المربع المخصص!'); return; }
+
+            const prefix = document.getElementById('prefixSelect').value;
+            const fullName = prefix ? prefix + " " + rawName : rawName;
 
             canvas.width = image.width;
             canvas.height = image.height;
@@ -327,18 +405,22 @@
             let fontSize = 60; 
             const maxTextWidth = canvas.width * 0.53; 
             ctx.font = `bold ${fontSize}px Tajawal`;
-            let textWidth = ctx.measureText(name).width;
+            let textWidth = ctx.measureText(fullName).width;
 
             while (textWidth > maxTextWidth && fontSize > 25) {
                 fontSize -= 2; 
                 ctx.font = `bold ${fontSize}px Tajawal`;
-                textWidth = ctx.measureText(name).width;
+                textWidth = ctx.measureText(fullName).width;
             }
 
             ctx.fillStyle = '#1a4670'; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(name, canvas.width / 2, canvas.height * 0.435);
+            ctx.fillText(fullName, canvas.width / 2, canvas.height * 0.435);
+
+            try {
+                ctx.drawImage(qrImg, canvas.width - 150, canvas.height - 150, 100, 100);
+            } catch (e) { console.log("QR stamp skipped or cross-origin block"); }
 
             document.getElementById('inputPage').style.display = 'none';
             document.getElementById('resultPage').style.display = 'block';
@@ -357,8 +439,7 @@
                 osc1.frequency.exponentialRampToValueAtTime(380, audioCtx.currentTime + 0.12);
                 gain1.gain.setValueAtTime(0.25, audioCtx.currentTime);
                 gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-                osc1.connect(gain1);
-                gain1.connect(audioCtx.destination);
+                osc1.connect(gain1); gain1.connect(audioCtx.destination);
                 osc1.start(); osc1.stop(audioCtx.currentTime + 0.15);
             } catch(e) {}
         }
@@ -376,11 +457,70 @@
             }, 260);
         }
 
-        // دالة المشاركة المباشرة (Web Share API)
+        function toggleAudio() {
+            const audio = document.getElementById('eidAudio');
+            const btn = document.getElementById('audioBtn');
+            if (audio.paused) {
+                audio.play().then(() => {
+                    btn.classList.add('playing');
+                    btn.innerText = "🔊";
+                }).catch(e => alert("يرجى التفاعل مع الصفحة أولاً لتشغيل الصوت بشكل آمن!"));
+            } else {
+                audio.pause();
+                btn.classList.remove('playing');
+                btn.innerText = "🕋";
+            }
+        }
+
+        const bgCanvas = document.getElementById('bgCanvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        let particles = [];
+        
+        function resizeBg() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBg);
+        resizeBg();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * bgCanvas.width;
+                this.y = bgCanvas.height + Math.random() * 100;
+                this.size = Math.random() * 3 + 1;
+                this.speed = Math.random() * 0.8 + 0.2;
+                this.alpha = Math.random() * 0.5 + 0.2;
+            }
+            update() {
+                this.y -= this.speed;
+                if (this.y < -10) {
+                    this.y = bgCanvas.height + 10;
+                    this.x = Math.random() * bgCanvas.width;
+                }
+            }
+            draw() {
+                bgCtx.save();
+                bgCtx.globalAlpha = this.alpha;
+                bgCtx.fillStyle = '#2b7bc0';
+                bgCtx.beginPath();
+                bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                bgCtx.fill();
+                bgCtx.restore();
+            }
+        }
+
+        for (let i = 0; i < 40; i++) { particles.push(new Particle()); }
+        function animateParticles() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
         async function shareCard() {
             if (navigator.share) {
                 canvas.toBlob(async (blob) => {
-                    const file = new File([blob], 'Eid_Greeting.png', { type: 'image/png' });
+                    const file = new File([blob], 'Eid_Berlin_Greeting.png', { type: 'image/png' });
                     if (navigator.canShare && navigator.canShare({ files: [file] })) {
                         try {
                             await navigator.share({
@@ -388,35 +528,28 @@
                                 title: 'تهنئة العيد - فريق برلين التطوعي',
                                 text: 'كل عام وأنتم بخير! ✨'
                             });
-                        } catch (err) { console.log('Share canceled or failed'); }
-                    } else {
-                        alert("عذراً، متصفحك لا يدعم المشاركة المباشرة للصور. يرجى استخدام زر التحميل.");
-                    }
+                        } catch (err) {}
+                    } else { alert("متصفحك لا يدعم مشاركة الصور المباشرة، يرجى استخدام زر التحميل."); }
                 });
-            } else {
-                alert("عذراً، جهازك لا يدعم المشاركة المباشرة. يرجى استخدام زر التحميل.");
-            }
+            } else { alert("جهازك لا يدعم المشاركة المباشرة، استخدم زر التحميل."); }
         }
 
-        // دالة نسخ نص التهنئة
         function copyGreetingText() {
             const userName = document.getElementById('nameInput').value.trim();
-            const textToCopy = `يطيب لي أن أرفع إليكم أصدق التهاني والتبريكات بمناسبة حلول عيد الأضحى المبارك، سائلاً المولى عز وجل أن يعيده علينا وعليكم باليُمن والبركات. وكل عام وأنتم بخير.\n\n- ${userName}`;
+            const prefix = document.getElementById('prefixSelect').value;
+            const finalSign = prefix ? `${prefix} ${userName}` : userName;
+            const textToCopy = `يطيب لي أن أرفع إليكم أصدق التهاني والتبريكات بمناسبة حلول عيد الأضحى المبارك، سائلاً المولى عز وجل أن يعيده علينا وعليكم باليُمن والبركات. وكل عام وأنتم بخير.\n\nمحبكم: ${finalSign}\nفريق برلين التطوعي ⚕️`;
             
             navigator.clipboard.writeText(textToCopy).then(() => {
-                alert("تم نسخ نص التهنئة بنجاح! يمكنك الآن لصقه في أي محادثة.");
-            }).catch(err => {
-                alert("عذراً، حدث خطأ أثناء النسخ.");
-            });
+                alert("تم نسخ نص التهنئة الاحترافي! يمكنك الآن لصقه في محادثاتك.");
+            }).catch(err => alert("حدث خطأ أثناء نسخ النص."));
         }
 
         const tiltContainer = document.getElementById('tiltContainer');
         tiltContainer.addEventListener('mousemove', (e) => {
             const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const xc = rect.width / 2;
-            const yc = rect.height / 2;
+            const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+            const xc = rect.width / 2; const yc = rect.height / 2;
             canvas.style.transform = `rotateX(${(yc - y) / 12}deg) rotateY(${(x - xc) / 12}deg) scale(1.02)`;
         });
         tiltContainer.addEventListener('mouseleave', () => {
