@@ -4,13 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تهنئة العيد - فريق برلين التطوعي</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
     <style>
+        :root {
+            --primary-color: #1a4670;
+            --accent-color: #2b7bc0;
+            --success-color: #28a745;
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.4);
+        }
+
+        /* تأثير الخلفية المموّهة المأخوذة من التصميم */
         body {
             font-family: 'Tajawal', sans-serif;
             text-align: center;
-            background-color: #f0f4f8;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -18,103 +29,222 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            background: linear-gradient(rgba(240, 244, 248, 0.85), rgba(240, 244, 248, 0.85)), url('card.PNG') no-repeat center center fixed;
+            background-size: cover;
+            box-sizing: border-box;
+            overflow-x: hidden;
         }
+
+        /* شاشة التحميل الاحترافية */
+        #loader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #f0f4f8;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        .loader-pulse {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            animation: pulse 1.5s infinite ease-in-out;
+            margin-bottom: 15px;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(26, 70, 112, 0.1);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.98); opacity: 0.6; }
+            50% { transform: scale(1.02); opacity: 1; }
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* حاوية الزجاج المصنفر الفخمة */
         .container {
             width: 100%;
-            max-width: 450px;
-            background: #ffffff;
-            padding: 30px 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            animation: fadeIn 0.5s ease-in-out;
+            max-width: 440px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 35px 25px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+            animation: containerFade 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            box-sizing: border-box;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes containerFade {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
         h2 {
-            color: #1a4670;
+            color: var(--primary-color);
             margin-top: 0;
             margin-bottom: 25px;
             font-size: 22px;
+            font-weight: 700;
         }
+
         input[type="text"] {
-            width: 90%;
-            padding: 15px;
+            width: 100%;
+            padding: 16px;
             font-size: 16px;
             font-family: 'Tajawal', sans-serif;
-            border: 2px solid #e1e8ed;
-            border-radius: 12px;
-            margin-bottom: 20px;
+            border: 2px solid rgba(26, 70, 112, 0.15);
+            border-radius: 14px;
+            margin-bottom: 22px;
             outline: none;
+            background: rgba(255, 255, 255, 0.8);
             transition: all 0.3s ease;
             box-sizing: border-box;
+            text-align: center;
         }
         input[type="text"]:focus {
-            border-color: #2b7bc0;
-            box-shadow: 0 0 8px rgba(43, 123, 192, 0.2);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 10px rgba(43, 123, 192, 0.25);
+            background: #ffffff;
         }
+
         button {
-            background-color: #2b7bc0;
+            background-color: var(--accent-color);
             color: white;
             border: none;
-            padding: 14px 30px;
+            padding: 15px 35px;
             font-size: 18px;
             font-weight: 700;
             font-family: 'Tajawal', sans-serif;
-            border-radius: 12px;
+            border-radius: 14px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            width: 90%;
-            max-width: 300px;
-            margin-bottom: 10px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(43, 123, 192, 0.2);
         }
         button:hover {
-            background-color: #1a4670;
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(26, 70, 112, 0.3);
         }
-        button:active {
-            transform: scale(0.97);
-        }
+        button:active { transform: translateY(1px); }
+
         .btn-secondary {
             background-color: #6c757d;
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
+            margin-top: 12px;
         }
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
+        .btn-secondary:hover { background-color: #545b62; }
+
         .btn-success {
-            background-color: #28a745;
+            background-color: var(--success-color);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+            margin-top: 15px;
         }
-        .btn-success:hover {
-            background-color: #218838;
+        .btn-success:hover { background-color: #1e7e34; }
+
+        /* منطقة عرض وتأثير البطاقة ثلاثي الأبعاد */
+        .tilt-wrapper {
+            perspective: 1000px;
+            margin: 25px 0;
+            display: inline-block;
+            width: 100%;
         }
         canvas {
-            max-width: 100%;
+            width: 100%;
             height: auto;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            margin-bottom: 20px;
+            border-radius: 18px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+            backface-visibility: hidden;
         }
-        #resultPage {
-            display: none;
+
+        #resultPage { display: none; }
+
+        /* قسم قنوات التواصل الفخم في الأسفل */
+        .team-footer {
+            margin-top: 30px;
+            border-top: 1px solid rgba(26, 70, 112, 0.1);
+            padding-top: 20px;
         }
+        .footer-title {
+            font-size: 13px;
+            color: rgba(26, 70, 112, 0.7);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .icon-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            text-decoration: none;
+        }
+        .icon-link:hover {
+            transform: translateY(-4px);
+            background: var(--primary-color);
+            box-shadow: 0 6px 12px rgba(26, 70, 112, 0.25);
+        }
+        .icon-link svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--primary-color);
+            transition: fill 0.3s ease;
+        }
+        .icon-link:hover svg { fill: #ffffff; }
     </style>
 </head>
 <body>
 
+    <div id="loader">
+        <div class="loader-pulse">فريق برلين التطوعي</div>
+        <div class="spinner"></div>
+    </div>
+
     <div id="inputPage" class="container">
         <h2>أصدر بطاقة التهنئة الخاصة بك</h2>
-        <input type="text" id="nameInput" placeholder="اكتب اسمك هنا..." maxlength="40">
-        <br>
-        <button onclick="generateCard()">إنشاء البطاقة</button>
+        <input type="text" id="nameInput" placeholder="اكتب اسمك الكريم هنا..." maxlength="40">
+        <button onclick="generateCard()">إنشاء البطاقة الاحترافية</button>
+        
+        <div class="team-footer">
+            <div class="footer-title">منصات فريق برلين التطوعي الإعلامية</div>
+            <div class="social-icons" id="socialsInputPage"></div>
+        </div>
     </div>
 
     <div id="resultPage" class="container">
         <h2>كل عام وأنت بخير! 🎉</h2>
-        <canvas id="canvas"></canvas>
-        <br>
-        <button class="btn-success" onclick="downloadImage()">تحميل البطاقة لجهازك</button>
-        <br>
-        <button class="btn-secondary" onclick="goBack()">رجوع وتعديل الاسم</button>
+        
+        <div class="tilt-wrapper" id="tiltContainer">
+            <canvas id="canvas"></canvas>
+        </div>
+        
+        <button class="btn-success" onclick="downloadImage()">تحميل البطاقة بجودة عالية</button>
+        <button class="btn-secondary" onclick="goBack()">تعديل الاسم أو إنشاء أخرى</button>
+        
+        <div class="team-footer">
+            <div class="footer-title">تابع منصاتنا للمزيد من المبادرات</div>
+            <div class="social-icons" id="socialsResultPage"></div>
+        </div>
     </div>
 
     <script>
@@ -122,12 +252,39 @@
         const ctx = canvas.getContext('2d');
         const image = new Image();
         
+        // قراءة الصورة بالامتداد الصحيح المرفوع
         image.src = 'card.PNG'; 
 
         let imageLoaded = false;
         image.onload = function() {
             imageLoaded = true;
+            // إخفاء شاشة التحميل بمجرد جاهزية الصورة الخلفية
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loader').style.display = 'none';
+            }, 500);
         };
+
+        // مصفوفة الحسابات والأيقونات مدمجة SVG لحمايتها من عدم الظهور
+        const teamContacts = [
+            { name: 'X', url: 'https://x.com/Prleen_team', svg: '<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>' },
+            { name: 'TikTok', url: 'https://www.tiktok.com/@Prleen_team', svg: '<svg viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.03 1.6 4.17 1.13 1.2 2.75 1.9 4.43 2.05v3.82c-1.39-.11-2.77-.61-3.92-1.43-.19-.13-.37-.28-.55-.43v6.79c-.04 2.54-1.31 4.96-3.48 6.27-2.3 1.44-5.29 1.51-7.64.19-2.45-1.34-3.87-4.04-3.66-6.86.21-2.97 2.41-5.54 5.37-6.04.45-.07.91-.1 1.37-.1v3.91c-.42.04-.84.14-1.23.31-1.22.52-1.95 1.83-1.8 3.14.15 1.37 1.25 2.52 2.62 2.63 1.48.16 2.87-.85 3.14-2.31.06-.32.08-.64.08-.96V.02z"/></svg>' },
+            { name: 'Snapchat', url: 'https://www.snapchat.com/add/Prleen_team', svg: '<svg viewBox="0 0 24 24"><path d="M12 2c-3.79 0-6.85 2.76-7 6.42-.06.77.16 1.42.42 2.08.35.88.7 1.77.62 2.73-.05.62-.35 1.1-.9 1.46-.71.46-1.55.93-1.51 1.9.03.71.6 1.16 1.2 1.43.92.4 1.93.36 2.89.15.34-.07.61.1.75.41.48 1.09 1.58 1.9 2.83 2.06.46.06.94.06 1.4 0 1.25-.16 2.35-.97 2.83-2.06.14-.31.41-.48.75-.41.96.21 1.97.25 2.89-.15.6-.27 1.17-.72 1.2-1.43.04-.97-.8-1.44-1.51-1.9-.55-.36-.85-.84-.9-1.46-.08-.96.27-1.85.62-2.73.26-.66.48-1.31.42-2.08-.15-3.66-3.21-6.42-7-6.42z"/></svg>' },
+            { name: 'Email', url: 'mailto:Prleen.team@outlook.com', svg: '<svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>' },
+            { name: 'WhatsApp', url: 'https://wa.me/966557683385', svg: '<svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.455L0 24zm6.59-4.846c1.66.986 3.296 1.478 4.973 1.479 5.432 0 9.855-4.387 9.858-9.774.002-2.611-1.015-5.066-2.864-6.92-1.849-1.854-4.307-2.876-6.92-2.878-5.433 0-9.856 4.387-9.86 9.775-.001 1.764.475 3.3 1.408 4.713l-.997 3.646 3.734-.972zm11.115-3.39c-.254-.127-1.503-.742-1.737-.826-.233-.085-.403-.127-.572.127-.169.254-.656.826-.804.996-.148.17-.297.19-.551.063-.254-.127-1.071-.395-2.04-1.26-.754-.673-1.263-1.504-1.411-1.758-.148-.254-.016-.392.111-.518.115-.113.254-.296.381-.444.127-.148.17-.254.254-.423.085-.17.042-.317-.021-.444-.064-.127-.572-1.377-.784-1.88-.207-.502-.415-.434-.572-.434-.148 0-.317-.01-.487-.01-.17 0-.445.063-.678.317-.233.254-.89 0-.89 2.18s1.59 4.28 1.81 4.58c.22.3 3.108 4.823 7.518 6.74.188.06.415.162.61.196.546.078 1.042.062 1.433.004.437-.065 1.346-.54 1.536-1.06.19-.51.19-.955.134-1.04-.056-.086-.203-.148-.457-.275z"/></svg>' }
+        ];
+
+        // بناء الأيقونات برمجياً لتظهر في كلا الصفحتين
+        function setupSocials() {
+            const html = teamContacts.map(c => `
+                <a href="${c.url}" target="_blank" class="icon-link" title="${c.name}">
+                    ${c.svg}
+                </a>
+            `).join('');
+            document.getElementById('socialsInputPage').innerHTML = html;
+            document.getElementById('socialsResultPage').innerHTML = html;
+        }
+        setupSocials();
 
         function generateCard() {
             if (!imageLoaded) {
@@ -145,20 +302,19 @@
             canvas.height = image.height;
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-            // --- التعديل الجديد: ضبط حجم الخط ديناميكياً ---
-            let fontSize = 75; // الحجم الأساسي (الأكبر)
-            const maxTextWidth = canvas.width * 0.55; // أقصى عرض مسموح للاسم (تقريباً مساحة المربع)
+            // صغرنا الخط من 72 إلى 60 بناءً على طلبك
+            let fontSize = 60; 
+            const maxTextWidth = canvas.width * 0.53; 
 
             ctx.font = `bold ${fontSize}px Tajawal`;
             let textWidth = ctx.measureText(name).width;
 
-            // إذا كان الاسم أعرض من المربع، قم بتصغير الخط تدريجياً
+            // يصغر الخط تلقائياً لو الاسم أطول من المربع
             while (textWidth > maxTextWidth && fontSize > 25) {
-                fontSize -= 2; // صغر الخط بمقدار درجتين في كل مرة
+                fontSize -= 2; 
                 ctx.font = `bold ${fontSize}px Tajawal`;
                 textWidth = ctx.measureText(name).width;
             }
-            // ------------------------------------------------
 
             ctx.fillStyle = '#1a4670'; 
             ctx.textAlign = 'center';
@@ -172,13 +328,35 @@
             document.getElementById('inputPage').style.display = 'none';
             document.getElementById('resultPage').style.display = 'block';
 
+            // إطلاق الألعاب النارية والمؤثر الصوتي التلقائي
+            playPopSound();
             fireworks();
+        }
+
+        // المؤثر الصوتي الخاص الاحتفالي (Web Audio API للعمل بكفاءة على المتصفحات)
+        function playPopSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // الصوت الأول الصاعد
+                let osc1 = audioCtx.createOscillator();
+                let gain1 = audioCtx.createGain();
+                osc1.type = 'sine';
+                osc1.frequency.setValueAtTime(160, audioCtx.currentTime);
+                osc1.frequency.exponentialRampToValueAtTime(380, audioCtx.currentTime + 0.12);
+                gain1.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                osc1.connect(gain1);
+                gain1.connect(audioCtx.destination);
+                osc1.start();
+                osc1.stop(audioCtx.currentTime + 0.15);
+            } catch(e) { console.log("Audio play blocked or unsupported"); }
         }
 
         function fireworks() {
             var duration = 3 * 1000; 
             var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+            var defaults = { startVelocity: 28, spread: 360, ticks: 60, zIndex: 10 };
 
             function randomInRange(min, max) {
                 return Math.random() * (max - min) + min;
@@ -191,16 +369,32 @@
                     return clearInterval(interval);
                 }
 
-                var particleCount = 50 * (timeLeft / duration);
+                var particleCount = 45 * (timeLeft / duration);
                 
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: 1 } }));
-                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: 1 } }));
-            }, 250);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.15, 0.35), y: 0.95 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.65, 0.85), y: 0.95 } }));
+            }, 260);
         }
+
+        // ميزة تفاعل الـ 3D مع حركة المؤشر أو اللمس للمستخدم
+        const tiltContainer = document.getElementById('tiltContainer');
+        tiltContainer.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const xc = rect.width / 2;
+            const yc = rect.height / 2;
+            const angleX = (yc - y) / 12; 
+            const angleY = (x - xc) / 12;
+            canvas.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.02)`;
+        });
+        tiltContainer.addEventListener('mouseleave', () => {
+            canvas.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+        });
 
         function downloadImage() {
             const link = document.createElement('a');
-            link.download = 'تهنئة_فريق_برلين.png'; 
+            link.download = 'تهنئة_فريق_برلين_التطوعي.png'; 
             link.href = canvas.toDataURL('image/png', 1.0); 
             link.click();
         }
