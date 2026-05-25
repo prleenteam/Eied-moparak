@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تهنئة العيد - فريق برلين الصحي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            text-align: center;
+            background-color: #eaf1f8;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #1a4670;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 85%;
+            padding: 12px;
+            font-size: 16px;
+            font-family: 'Tajawal', sans-serif;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #2b7bc0;
+        }
+        button {
+            background-color: #2b7bc0;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            font-family: 'Tajawal', sans-serif;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #1a4670;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+            margin-top: 25px;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        #downloadBtn {
+            background-color: #28a745;
+            margin-top: 20px;
+            display: none;
+        }
+        #downloadBtn:hover {
+            background-color: #1e7e34;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>أصدر بطاقة التهنئة الخاصة بك</h2>
+        <input type="text" id="nameInput" placeholder="اكتب اسمك هنا..." maxlength="25">
+        <br>
+        <button onclick="generateCard()">إنشاء البطاقة</button>
+        
+        <canvas id="canvas"></canvas>
+        <br>
+        <button id="downloadBtn" onclick="downloadImage()">تحميل البطاقة</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const image = new Image();
+        
+        // يجب أن يكون اسم صورتك الأساسية هو card.png
+        image.src = 'card.png'; 
+
+        function generateCard() {
+            const name = document.getElementById('nameInput').value.trim();
+            if(!name) {
+                alert('الرجاء كتابة اسمك أولاً!');
+                return;
+            }
+
+            // ضبط حجم مساحة الرسم بنفس أبعاد الصورة الأصلية
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            // رسم الصورة الأصلية
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+            // إعدادات الخط (حجم الخط، نوعه، ولونه)
+            ctx.font = 'bold 80px Tajawal'; // يمكنك تكبير أو تصغير الرقم 80 حسب رغبتك
+            ctx.fillStyle = '#1a4670'; // لون النص (أزرق غامق متناسق مع التصميم)
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // إحداثيات موقع النص (السر هنا لضبط الاسم في المربع)
+            const x = canvas.width / 2; // في المنتصف أفقياً
+            const y = canvas.height * 0.435; // موقع المربع عمودياً (يمكنك تعديل الرقم 0.435 قليلاً لأعلى أو أسفل إذا لزم الأمر)
+
+            // طباعة الاسم على الصورة
+            ctx.fillText(name, x, y);
+
+            // إظهار الصورة وزر التحميل
+            canvas.style.display = 'block';
+            document.getElementById('downloadBtn').style.display = 'inline-block';
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.download = 'تهنئة_عيد_الأضحى.png'; // الاسم الذي سيُحفظ به الملف
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+
+</body>
+</html>
