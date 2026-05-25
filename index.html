@@ -3,63 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تهنئة العيد - فريق برلين الصحي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght=700&display=swap" rel="stylesheet">
+    <title>تهنئة العيد - فريق برلين التطوعي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
             text-align: center;
-            background-color: #eaf1f8;
+            background-color: #f0f4f8; /* لون خلفية أهدأ للعين */
             margin: 0;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
         .container {
-            max-width: 500px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 450px;
             background: #ffffff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
         h2 {
             color: #1a4670;
-            margin-bottom: 20px;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 22px;
         }
         input[type="text"] {
-            width: 85%;
-            padding: 12px;
+            width: 90%;
+            padding: 15px;
             font-size: 16px;
             font-family: 'Tajawal', sans-serif;
-            border: 2px solid #ccc;
-            border-radius: 8px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
             margin-bottom: 20px;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
         input[type="text"]:focus {
             border-color: #2b7bc0;
+            box-shadow: 0 0 8px rgba(43, 123, 192, 0.2);
         }
         button {
             background-color: #2b7bc0;
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 14px 30px;
             font-size: 18px;
+            font-weight: 700;
             font-family: 'Tajawal', sans-serif;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            width: 90%;
+            max-width: 300px;
         }
         button:hover {
             background-color: #1a4670;
+        }
+        button:active {
+            transform: scale(0.97);
         }
         canvas {
             max-width: 100%;
             height: auto;
             margin-top: 25px;
-            border-radius: 10px;
+            border-radius: 15px;
             display: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
         #downloadBtn {
             background-color: #28a745;
@@ -67,7 +82,7 @@
             display: none;
         }
         #downloadBtn:hover {
-            background-color: #1e7e34;
+            background-color: #218838;
         }
     </style>
 </head>
@@ -75,13 +90,13 @@
 
     <div class="container">
         <h2>أصدر بطاقة التهنئة الخاصة بك</h2>
-        <input type="text" id="nameInput" placeholder="اكتب اسمك هنا..." maxlength="25">
+        <input type="text" id="nameInput" placeholder="اكتب اسمك الثلاثي أو الثنائي هنا..." maxlength="30">
         <br>
         <button onclick="generateCard()">إنشاء البطاقة</button>
         
         <canvas id="canvas"></canvas>
         <br>
-        <button id="downloadBtn" onclick="downloadImage()">تحميل البطاقة</button>
+        <button id="downloadBtn" onclick="downloadImage()">تحميل البطاقة لجهازك</button>
     </div>
 
     <script>
@@ -89,59 +104,56 @@
         const ctx = canvas.getContext('2d');
         const image = new Image();
         
-        // مسار الصورة الأساسية
+        // تم تغيير الحروف إلى كبيرة بناءً على طلبك
         image.src = 'card.PNG'; 
 
-        // نظام حماية: إذا لم يجد الكود الصورة أو فشل في تحميلها يظهر تنبيه فوراً
-        image.onerror = function() {
-            alert("خطأ: لم يتم العثور على ملف الصورة 'card.png'. تأكد من رفع الصورة في حساب GitHub بنفس المجلد وبنفس الاسم تماماً وبحروف صغيرة (card.png).");
+        // التأكد من تحميل الصورة قبل السماح بالرسم لتجنب الأخطاء
+        let imageLoaded = false;
+        image.onload = function() {
+            imageLoaded = true;
         };
 
         function generateCard() {
+            if (!imageLoaded) {
+                alert('جاري تحميل تصميم البطاقة، يرجى المحاولة بعد ثانية...');
+                return;
+            }
+
             const name = document.getElementById('nameInput').value.trim();
             if(!name) {
-                alert('الرجاء كتابة اسمك أولاً!');
+                alert('الرجاء كتابة اسمك أولاً في المربع المخصص!');
                 return;
             }
 
-            // التحقق من أن الصورة جاهزة ومحملة بالكامل
-            if (!image.complete || image.naturalWidth === 0) {
-                alert('تنبيه: الصورة لا تزال قيد التحميل أو لم يتم العثور عليها، يرجى التأكد من رفع ملف الصورة بشكل صحيح.');
-                return;
-            }
+            // ضبط مساحة الرسم لتطابق دقة الصورة الأصلية تماماً للحفاظ على جودتها
+            canvas.width = image.width;
+            canvas.height = image.height;
 
-            // ضبط الأبعاد الحقيقية للصورة
-            canvas.width = image.naturalWidth;
-            canvas.height = image.naturalHeight;
-
-            // رسم الصورة
+            // رسم الخلفية (التصميم الخاص بك)
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-            // إعدادات الخط داخل المربع
-            ctx.font = 'bold 80px Tajawal'; 
-            ctx.fillStyle = '#1a4670'; 
+            // إعدادات النص المكتوب (الاسم)
+            ctx.font = 'bold 85px Tajawal'; // حجم الخط
+            ctx.fillStyle = '#1a4670'; // لون متناسق مع شعار الفريق والتصميم
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            // إحداثيات موقع النص (في منتصف المربع تماماً)
+            // الإحداثيات: X للمنتصف العرضي، Y للمنتصف الطولي للمربع المخصص للاسم
             const x = canvas.width / 2; 
-            const y = canvas.height * 0.435; 
+            const y = canvas.height * 0.435; // يمكنك تعديل هذا الرقم لرفع أو خفض الاسم
 
             // طباعة الاسم
             ctx.fillText(name, x, y);
 
-            // إظهار بطاقة المعاينة وزر التحميل للمستخدم
+            // إظهار النتيجة للمستخدم
             canvas.style.display = 'block';
             document.getElementById('downloadBtn').style.display = 'inline-block';
-            
-            // التمرير التلقائي لأسفل ليظهر التصميم للمستخدم على الجوال
-            canvas.scrollIntoView({ behavior: 'smooth' });
         }
 
         function downloadImage() {
             const link = document.createElement('a');
-            link.download = 'تهنئة_عيد_الأضحى.png'; 
-            link.href = canvas.toDataURL('image/png');
+            link.download = 'تهنئة_فريق_برلين.png'; 
+            link.href = canvas.toDataURL('image/png', 1.0); // استخدام أعلى جودة للتحميل
             link.click();
         }
     </script>
