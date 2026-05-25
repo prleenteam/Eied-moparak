@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تهنئة العيد - فريق برلين التطوعي</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         body {
             font-family: 'Tajawal', sans-serif;
             text-align: center;
-            background-color: #f0f4f8; /* لون خلفية أهدأ للعين */
+            background-color: #f0f4f8;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -25,6 +26,12 @@
             padding: 30px 20px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            /* حركة انتقال ناعمة للصفحات */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         h2 {
             color: #1a4670;
@@ -61,6 +68,7 @@
             transition: background-color 0.3s ease, transform 0.1s ease;
             width: 90%;
             max-width: 300px;
+            margin-bottom: 10px;
         }
         button:hover {
             background-color: #1a4670;
@@ -68,35 +76,47 @@
         button:active {
             transform: scale(0.97);
         }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .btn-success {
+            background-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
         canvas {
             max-width: 100%;
             height: auto;
-            margin-top: 25px;
             border-radius: 15px;
-            display: none;
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
         }
-        #downloadBtn {
-            background-color: #28a745;
-            margin-top: 20px;
+        /* إخفاء صفحة النتيجة في البداية */
+        #resultPage {
             display: none;
-        }
-        #downloadBtn:hover {
-            background-color: #218838;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div id="inputPage" class="container">
         <h2>أصدر بطاقة التهنئة الخاصة بك</h2>
-        <input type="text" id="nameInput" placeholder="اكتب اسمك الثلاثي أو الثنائي هنا..." maxlength="30">
+        <input type="text" id="nameInput" placeholder="اكتب اسمك هنا..." maxlength="30">
         <br>
         <button onclick="generateCard()">إنشاء البطاقة</button>
-        
+    </div>
+
+    <div id="resultPage" class="container">
+        <h2>كل عام وأنت بخير! 🎉</h2>
         <canvas id="canvas"></canvas>
         <br>
-        <button id="downloadBtn" onclick="downloadImage()">تحميل البطاقة لجهازك</button>
+        <button class="btn-success" onclick="downloadImage()">تحميل البطاقة لجهازك</button>
+        <br>
+        <button class="btn-secondary" onclick="goBack()">رجوع وتعديل الاسم</button>
     </div>
 
     <script>
@@ -104,10 +124,9 @@
         const ctx = canvas.getContext('2d');
         const image = new Image();
         
-        // تم تغيير الحروف إلى كبيرة بناءً على طلبك
+        // الصورة بالصيغة الكبيرة كما طلبنا
         image.src = 'card.PNG'; 
 
-        // التأكد من تحميل الصورة قبل السماح بالرسم لتجنب الأخطاء
         let imageLoaded = false;
         image.onload = function() {
             imageLoaded = true;
@@ -125,36 +144,65 @@
                 return;
             }
 
-            // ضبط مساحة الرسم لتطابق دقة الصورة الأصلية تماماً للحفاظ على جودتها
+            // رسم البطاقة
             canvas.width = image.width;
             canvas.height = image.height;
-
-            // رسم الخلفية (التصميم الخاص بك)
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-            // إعدادات النص المكتوب (الاسم)
-            ctx.font = 'bold 85px Tajawal'; // حجم الخط
-            ctx.fillStyle = '#1a4670'; // لون متناسق مع شعار الفريق والتصميم
+            // تصغير الخط شوي (صار 75 بدل 85)
+            ctx.font = 'bold 75px Tajawal'; 
+            ctx.fillStyle = '#1a4670'; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            // الإحداثيات: X للمنتصف العرضي، Y للمنتصف الطولي للمربع المخصص للاسم
             const x = canvas.width / 2; 
-            const y = canvas.height * 0.435; // يمكنك تعديل هذا الرقم لرفع أو خفض الاسم
+            const y = canvas.height * 0.435; 
 
-            // طباعة الاسم
             ctx.fillText(name, x, y);
 
-            // إظهار النتيجة للمستخدم
-            canvas.style.display = 'block';
-            document.getElementById('downloadBtn').style.display = 'inline-block';
+            // إخفاء صفحة الإدخال وإظهار صفحة النتيجة (محاكاة الانتقال لصفحة أخرى)
+            document.getElementById('inputPage').style.display = 'none';
+            document.getElementById('resultPage').style.display = 'block';
+
+            // تشغيل الألعاب النارية لمدة 3 ثواني
+            fireworks();
+        }
+
+        function fireworks() {
+            var duration = 3 * 1000; // 3 ثواني
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                
+                // خروج الألعاب النارية من الأسفل (اليسار واليمين)
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: 1 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: 1 } }));
+            }, 250);
         }
 
         function downloadImage() {
             const link = document.createElement('a');
             link.download = 'تهنئة_فريق_برلين.png'; 
-            link.href = canvas.toDataURL('image/png', 1.0); // استخدام أعلى جودة للتحميل
+            link.href = canvas.toDataURL('image/png', 1.0); 
             link.click();
+        }
+
+        // دالة لزر الرجوع في حال أراد الشخص تعديل اسمه
+        function goBack() {
+            document.getElementById('resultPage').style.display = 'none';
+            document.getElementById('inputPage').style.display = 'block';
         }
     </script>
 
