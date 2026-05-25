@@ -113,7 +113,7 @@
             width: calc(100% - 40px);
             max-width: 440px;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end; /* تم التعديل ليكون زر الوضع الليلي على اليمين/اليسار فقط */
             z-index: 1000;
             pointer-events: none;
         }
@@ -134,14 +134,6 @@
             pointer-events: auto;
         }
         .control-btn:hover { transform: scale(1.1); }
-        .control-btn.playing {
-            animation: pulse-audio 1.2s infinite ease-in-out;
-            background: var(--success-color);
-        }
-        @keyframes pulse-audio {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); box-shadow: 0 4px 20px rgba(40, 167, 69, 0.4); }
-        }
 
         /* حاوية الواجهة الزجاجية */
         .container {
@@ -322,13 +314,7 @@
     </div>
 
     <div class="top-controls">
-        <button class="control-btn" id="audioBtn" onclick="toggleAudio()" title="عيّش جو العيد 🕋">🕋</button>
         <button class="control-btn" id="themeBtn" onclick="toggleDarkMode()" title="الوضع الليلي 🌙">🌙</button>
-        
-        <audio id="eidAudio" loop preload="auto">
-            <source src="takbeer.mp3" type="audio/mp3">
-            <source src="https://ia600208.us.archive.org/3/items/EidTakbeerat/EidTakbeerat.mp3" type="audio/mp3">
-        </audio>
     </div>
 
     <div id="inputPage" class="container">
@@ -394,11 +380,7 @@
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         const image = new Image();
-        image.src = 'card.png'; // حروف صغيرة سمول بالكامل كما طلبت
-
-        const qrImg = new Image();
-        qrImg.crossOrigin = "anonymous";
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&color=1a4670&data=${encodeURIComponent(window.location.href)}`;
+        image.src = 'card.png'; 
 
         let imageLoaded = false;
         image.onload = function() {
@@ -450,30 +432,10 @@
             ctx.textBaseline = 'middle';
             ctx.fillText(fullName, canvas.width / 2, canvas.height * 0.435);
 
-            try {
-                ctx.drawImage(qrImg, canvas.width - 150, canvas.height - 150, 100, 100);
-            } catch (e) { console.log("QR stamp skipped or cross-origin block"); }
-
             document.getElementById('inputPage').style.display = 'none';
             document.getElementById('resultPage').style.display = 'block';
 
-            playPopSound();
             fireworks();
-        }
-
-        function playPopSound() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                let osc1 = audioCtx.createOscillator();
-                let gain1 = audioCtx.createGain();
-                osc1.type = 'sine';
-                osc1.frequency.setValueAtTime(160, audioCtx.currentTime);
-                osc1.frequency.exponentialRampToValueAtTime(380, audioCtx.currentTime + 0.12);
-                gain1.gain.setValueAtTime(0.25, audioCtx.currentTime);
-                gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-                osc1.connect(gain1); gain1.connect(audioCtx.destination);
-                osc1.start(); osc1.stop(audioCtx.currentTime + 0.15);
-            } catch(e) {}
         }
 
         function fireworks() {
@@ -489,36 +451,6 @@
             }, 260);
         }
 
-        // دالة تشغيل وكتم الصوت
-        function toggleAudio() {
-            const audio = document.getElementById('eidAudio');
-            const btn = document.getElementById('audioBtn');
-            if (audio.paused) {
-                audio.play().then(() => {
-                    btn.classList.add('playing');
-                    btn.innerText = "🔊";
-                }).catch(e => console.log("تفاعل مطلوب أولاً"));
-            } else {
-                audio.pause();
-                btn.classList.remove('playing');
-                btn.innerText = "🕋";
-            }
-        }
-
-        // ميزة التشغيل التلقائي بمجرد أول تفاعل أو لمس من المستخدم للشاشة
-        let audioStarted = false;
-        document.body.addEventListener('click', function() {
-            if (!audioStarted) {
-                const audio = document.getElementById('eidAudio');
-                const btn = document.getElementById('audioBtn');
-                audio.play().then(() => {
-                    btn.classList.add('playing');
-                    btn.innerText = "🔊";
-                    audioStarted = true;
-                }).catch(e => console.log("المتصفح حظر البث المباشر المبدئي"));
-            }
-        }, { once: true });
-
         // ميزة تحويل الوضع الليلي (Dark Mode Toggle)
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
@@ -532,7 +464,7 @@
             }
         }
 
-        // ميزة مشاركة رابط المنصة نفسه مع الأصدقاء دعوتهم
+        // ميزة مشاركة رابط المنصة نفسه مع الأصدقاء
         function shareWebsite() {
             const inviteText = `تفضل بتصميم بطاقة تهنئة عيد الأضحى المبارك باسمك ولقبك الخاص مجاناً من خلال منصة فريق برلين التطوعي عبر الرابط التالي:\n${window.location.href}`;
             if (navigator.share) {
@@ -543,7 +475,7 @@
                 }).catch(() => {});
             } else {
                 navigator.clipboard.writeText(inviteText).then(() => {
-                    alert("تم نسخ رابط المنصة مع نص الدعوة الحافظة! يمكنك الآن لصقه في الواتساب وإرساله لأصدقائك. 🔗");
+                    alert("تم نسخ رابط المنصة مع نص الدعوة! يمكنك الآن لصقه في الواتساب وإرساله لأصدقائك. 🔗");
                 });
             }
         }
@@ -598,7 +530,7 @@
                                 text: 'كل عام وأنتم بخير! ✨'
                             });
                         } catch (err) {}
-                    } else { alert("متصفحك لا يدعم مشاركة الصور، يرجى تحميلها."); }
+                    } else { alert("متصفحك لا يدعم مشاركة الصور المباشرة، يرجى استخدام زر التحميل."); }
                 });
             } else { alert("جهازك لا يدعم المشاركة المباشرة، استخدم زر التحميل."); }
         }
