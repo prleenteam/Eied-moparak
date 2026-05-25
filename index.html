@@ -26,7 +26,6 @@
             padding: 30px 20px;
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            /* حركة انتقال ناعمة للصفحات */
             animation: fadeIn 0.5s ease-in-out;
         }
         @keyframes fadeIn {
@@ -95,7 +94,6 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
             margin-bottom: 20px;
         }
-        /* إخفاء صفحة النتيجة في البداية */
         #resultPage {
             display: none;
         }
@@ -105,7 +103,7 @@
 
     <div id="inputPage" class="container">
         <h2>أصدر بطاقة التهنئة الخاصة بك</h2>
-        <input type="text" id="nameInput" placeholder="اكتب اسمك هنا..." maxlength="30">
+        <input type="text" id="nameInput" placeholder="اكتب اسمك هنا..." maxlength="40">
         <br>
         <button onclick="generateCard()">إنشاء البطاقة</button>
     </div>
@@ -124,7 +122,6 @@
         const ctx = canvas.getContext('2d');
         const image = new Image();
         
-        // الصورة بالصيغة الكبيرة كما طلبنا
         image.src = 'card.PNG'; 
 
         let imageLoaded = false;
@@ -144,13 +141,25 @@
                 return;
             }
 
-            // رسم البطاقة
             canvas.width = image.width;
             canvas.height = image.height;
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
-            // تصغير الخط شوي (صار 75 بدل 85)
-            ctx.font = 'bold 75px Tajawal'; 
+            // --- التعديل الجديد: ضبط حجم الخط ديناميكياً ---
+            let fontSize = 75; // الحجم الأساسي (الأكبر)
+            const maxTextWidth = canvas.width * 0.55; // أقصى عرض مسموح للاسم (تقريباً مساحة المربع)
+
+            ctx.font = `bold ${fontSize}px Tajawal`;
+            let textWidth = ctx.measureText(name).width;
+
+            // إذا كان الاسم أعرض من المربع، قم بتصغير الخط تدريجياً
+            while (textWidth > maxTextWidth && fontSize > 25) {
+                fontSize -= 2; // صغر الخط بمقدار درجتين في كل مرة
+                ctx.font = `bold ${fontSize}px Tajawal`;
+                textWidth = ctx.measureText(name).width;
+            }
+            // ------------------------------------------------
+
             ctx.fillStyle = '#1a4670'; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -160,16 +169,14 @@
 
             ctx.fillText(name, x, y);
 
-            // إخفاء صفحة الإدخال وإظهار صفحة النتيجة (محاكاة الانتقال لصفحة أخرى)
             document.getElementById('inputPage').style.display = 'none';
             document.getElementById('resultPage').style.display = 'block';
 
-            // تشغيل الألعاب النارية لمدة 3 ثواني
             fireworks();
         }
 
         function fireworks() {
-            var duration = 3 * 1000; // 3 ثواني
+            var duration = 3 * 1000; 
             var animationEnd = Date.now() + duration;
             var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
@@ -186,7 +193,6 @@
 
                 var particleCount = 50 * (timeLeft / duration);
                 
-                // خروج الألعاب النارية من الأسفل (اليسار واليمين)
                 confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: 1 } }));
                 confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: 1 } }));
             }, 250);
@@ -199,7 +205,6 @@
             link.click();
         }
 
-        // دالة لزر الرجوع في حال أراد الشخص تعديل اسمه
         function goBack() {
             document.getElementById('resultPage').style.display = 'none';
             document.getElementById('inputPage').style.display = 'block';
