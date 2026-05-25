@@ -9,7 +9,7 @@
     <meta property="og:image" content="card.png">
     <meta property="og:type" content="website">
     
-    <link rel="icon" href="card.png" type="image/png">
+    <link rel="icon" href="card2.png" type="image/png">
     
     <title>تهنئة العيد - فريق برلين التطوعي</title>
     
@@ -24,8 +24,8 @@
             --success-color: #28a745;
             --share-color: #8e44ad;
             --copy-color: #e67e22;
-            --glass-bg: rgba(255, 255, 255, 0.78);
-            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.6);
         }
 
         body {
@@ -38,8 +38,8 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            /* الامتداد بحروف صغيرة */
-            background: linear-gradient(rgba(240, 244, 248, 0.8), rgba(240, 244, 248, 0.8)), url('card.png') no-repeat center center fixed;
+            /* الخلفية الضبابية باستخدام الشعار card2.png */
+            background: linear-gradient(rgba(240, 244, 248, 0.88), rgba(240, 244, 248, 0.88)), url('card2.png') no-repeat center center fixed;
             background-size: cover;
             box-sizing: border-box;
             overflow-x: hidden;
@@ -297,8 +297,8 @@
     <div id="audioContainer">
         <button class="audio-btn" id="audioBtn" onclick="toggleAudio()" title="عيّش جو العيد 🕋">🕋</button>
         <audio id="eidAudio" loop preload="auto">
-            <source src="https://ia801002.us.archive.org/21/items/TakbeeratEid/Takbeerat%20Eid%20Al-Fitr%20-%20%D1%AA%D9%83%D8%A8%D9%8A%D8%B1%D8%A7%D8%AA%20%D8%B9%D9%8A%D8%AF%20%D8%A7%D9%8الـفـطـر.mp3" type="audio/mp3">
-            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+            <source src="takbeer.mp3" type="audio/mp3">
+            <source src="https://ia600208.us.archive.org/3/items/EidTakbeerat/EidTakbeerat.mp3" type="audio/mp3">
         </audio>
     </div>
 
@@ -307,7 +307,8 @@
         <div class="input-group">
             <select id="prefixSelect">
                 <option value="">بدون لقب</option>
-                <option value="أ.">أ.</option> <option value="د.">د.</option>
+                <option value="أ.">أ.</option>
+                <option value="د.">د.</option>
                 <option value="أخصائي">أخصائي</option>
                 <option value="أخصائية">أخصائية</option>
                 <option value="ممارس صحي">ممارس صحي</option>
@@ -361,7 +362,7 @@
         const ctx = canvas.getContext('2d');
         const image = new Image();
         
-        // الامتداد بحروف صغيرة
+        // الصورة الأساسية للبطاقة
         image.src = 'card.png'; 
 
         const qrImg = new Image();
