@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <meta property="og:title" content="بطاقة تهنئة العيد - فريق برلين التطوعي">
-    <meta property="og:description" content="أصدر بطاقة تهنئة عيد الأضحى المبارك باسمك ولقبك المهني وشاركها فوراً.">
+    <meta property="og:description" content="أصدر بطاقة تهنئة عيد الأضحى المبارك باسمك وشاركها فوراً.">
     <meta property="og:image" content="card.png">
     <meta property="og:type" content="website">
     
@@ -113,7 +113,7 @@
             width: calc(100% - 40px);
             max-width: 440px;
             display: flex;
-            justify-content: flex-end; /* تم التعديل ليكون زر الوضع الليلي على اليمين/اليسار فقط */
+            justify-content: flex-end;
             z-index: 1000;
             pointer-events: none;
         }
@@ -163,34 +163,15 @@
             font-weight: 700;
         }
 
-        /* حقل الإدخال واللقب المهني */
-        .input-group {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 22px;
-            width: 100%;
-        }
-        select {
-            width: 32%;
-            padding: 16px;
-            font-size: 15px;
-            font-family: 'Tajawal', sans-serif;
-            font-weight: 700;
-            border: 2px solid rgba(26, 70, 112, 0.15);
-            border-radius: 14px;
-            outline: none;
-            background: var(--input-bg);
-            color: var(--text-color);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+        /* حقل الإدخال */
         input[type="text"] {
-            width: 68%;
+            width: 100%;
             padding: 16px;
             font-size: 16px;
             font-family: 'Tajawal', sans-serif;
             border: 2px solid rgba(26, 70, 112, 0.15);
             border-radius: 14px;
+            margin-bottom: 22px;
             outline: none;
             background: var(--input-bg);
             color: var(--text-color);
@@ -198,7 +179,7 @@
             box-sizing: border-box;
             text-align: center;
         }
-        select:focus, input[type="text"]:focus {
+        input[type="text"]:focus {
             border-color: var(--accent-color);
             box-shadow: 0 0 10px rgba(43, 123, 192, 0.25);
         }
@@ -319,19 +300,7 @@
 
     <div id="inputPage" class="container">
         <h2>أصدر بطاقة التهنئة الخاصة بك</h2>
-        <div class="input-group">
-            <select id="prefixSelect">
-                <option value="">بدون لقب</option>
-                <option value="أ.">أ.</option>
-                <option value="د.">د.</option>
-                <option value="أخصائي">أخصائي</option>
-                <option value="أخصائية">أخصائية</option>
-                <option value="ممارس صحي">ممارس صحي</option>
-                <option value="متطوع">متطوع</option>
-                <option value="متطوعة">متطوعة</option>
-            </select>
-            <input type="text" id="nameInput" placeholder="اكتب اسمك الكريم هنا..." maxlength="35">
-        </div>
+        <input type="text" id="nameInput" placeholder="اكتب اسمك الكريم هنا..." maxlength="40">
         <button class="btn-primary" onclick="generateCard()">إنشاء البطاقة الاحترافية</button>
         
         <div class="team-footer">
@@ -406,11 +375,8 @@
 
         function generateCard() {
             if (!imageLoaded) { alert('جاري تحميل تصميم البطاقة، يرجى المحاولة بعد ثانية...'); return; }
-            const rawName = document.getElementById('nameInput').value.trim();
-            if(!rawName) { alert('الرجاء كتابة اسمك أولاً في المربع المخصص!'); return; }
-
-            const prefix = document.getElementById('prefixSelect').value;
-            const fullName = prefix ? prefix + " " + rawName : rawName;
+            const name = document.getElementById('nameInput').value.trim();
+            if(!name) { alert('الرجاء كتابة اسمك أولاً في المربع المخصص!'); return; }
 
             canvas.width = image.width;
             canvas.height = image.height;
@@ -419,18 +385,18 @@
             let fontSize = 60; 
             const maxTextWidth = canvas.width * 0.53; 
             ctx.font = `bold ${fontSize}px Tajawal`;
-            let textWidth = ctx.measureText(fullName).width;
+            let textWidth = ctx.measureText(name).width;
 
             while (textWidth > maxTextWidth && fontSize > 25) {
                 fontSize -= 2; 
                 ctx.font = `bold ${fontSize}px Tajawal`;
-                textWidth = ctx.measureText(fullName).width;
+                textWidth = ctx.measureText(name).width;
             }
 
             ctx.fillStyle = '#1a4670'; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(fullName, canvas.width / 2, canvas.height * 0.435);
+            ctx.fillText(name, canvas.width / 2, canvas.height * 0.435);
 
             document.getElementById('inputPage').style.display = 'none';
             document.getElementById('resultPage').style.display = 'block';
@@ -466,7 +432,7 @@
 
         // ميزة مشاركة رابط المنصة نفسه مع الأصدقاء
         function shareWebsite() {
-            const inviteText = `تفضل بتصميم بطاقة تهنئة عيد الأضحى المبارك باسمك ولقبك الخاص مجاناً من خلال منصة فريق برلين التطوعي عبر الرابط التالي:\n${window.location.href}`;
+            const inviteText = `تفضل بتصميم بطاقة تهنئة عيد الأضحى المبارك باسمك مجاناً من خلال منصة فريق برلين التطوعي عبر الرابط التالي:\n${window.location.href}`;
             if (navigator.share) {
                 navigator.share({
                     title: 'منصة تهاني فريق برلين',
@@ -537,9 +503,7 @@
 
         function copyGreetingText() {
             const userName = document.getElementById('nameInput').value.trim();
-            const prefix = document.getElementById('prefixSelect').value;
-            const finalSign = prefix ? `${prefix} ${userName}` : userName;
-            const textToCopy = `يطيب لي أن أرفع إليكم أصدق التهاني والتبريكات بمناسبة حلول عيد الأضحى المبارك، سائلاً المولى عز وجل أن يعيده علينا وعليكم باليُمن والبركات. وكل عام وأنتم بخير.\n\nمحبكم: ${finalSign}\nفريق برلين التطوعي ⚕️`;
+            const textToCopy = `يطيب لي أن أرفع إليكم أصدق التهاني والتبريكات بمناسبة حلول عيد الأضحى المبارك، سائلاً المولى عز وجل أن يعيده علينا وعليكم باليُمن والبركات. وكل عام وأنتم بخير.\n\nمحبكم: ${userName}\nفريق برلين التطوعي ⚕️`;
             
             navigator.clipboard.writeText(textToCopy).then(() => {
                 alert("تم نسخ نص التهنئة الاحترافي! يمكنك الآن لصقه في محادثاتك.");
